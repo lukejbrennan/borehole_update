@@ -1,0 +1,42 @@
+CTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<!--
+    <title>Bosco Uganda - Location Map</title>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}borehole/stylesheets/base.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}borehole/stylesheets/style.css" />
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}borehole/javascripts/jquery-1.5.2.js"></script>
+-->
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBjLBIdL0A50jdQ_alGjP3kYfeGRSXNQEo&sensor=true"></script>
+<!--
+     <script type="text/javascript" src="{{ STATIC_URL }}borehole/javascripts/infobox.js"></script>
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}borehole/javascripts/bosco.js"></script>
+-->
+</head>
+<body onload="initialize();">
+    <script type="text/javascript">
+    function initMap(myLat, myLon, myName) {
+        var myLatLng = {lat: myLat, lng: myLon};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: myLatLng
+        });
+
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: myName
+        });
+      }
+    </script>
+    {% for bh in borehole_list_all %}
+        <script>
+            initMap({{bh.lat}},{{bh.lon}},{{bh.borehole_ID}})
+        </script>
+    {% endfor %}
+    <div style="display: block; height: 600px; position: relative;">
+        <div id="map_canvas" style="display: inline-block; position: absolute; top: 5px; left: 5px; width: 800px; height: 590px; border: 1px solid #aaa;"></div>
+    </div>
+</body>
+</html>

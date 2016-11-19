@@ -1,0 +1,103 @@
+CTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>Bosco Uganda - Location Map</title>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}borehole/stylesheets/base.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}borehole/stylesheets/style.css" />
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}borehole/javascripts/jquery-1.5.2.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBjLBIdL0A50jdQ_alGjP3kYfeGRSXNQEo&sensor=true"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}borehole/javascripts/infobox.js"></script>
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}borehole/javascripts/bosco.js"></script>
+-->
+</head>
+<body onload="initialize();">
+    <script type="text/javascript">
+    var selected_borehole = -1;
+    var boreholes = new Array();
+    var borehole_counter = 0;
+
+    var redMarker = new google.maps.MarkerImage("images/red-dot.png",
+        new google.maps.Size(32.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(16.0, 16.0)
+    );
+    var greenMarker = new google.maps.MarkerImage("images/green-dot.png",
+        new google.maps.Size(32.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(16.0, 16.0)
+    );
+    var blueMarker = new google.maps.MarkerImage("images/blue-dot.png",
+        new google.maps.Size(32.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(16.0, 16.0)
+    );
+    var shadow = new google.maps.MarkerImage("images/shadow-dot.png",
+        new google.maps.Size(49.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(16.0, 16.0)
+    );
+        
+    function borehole(borehole_id, name, lat, lon) {
+        this.borehole_id = borehole_id;
+        this.name = name;
+        this.lat = lat;
+        this.lon = lon;
+    }
+    function select_borehole(borehole_id) {
+        if (selected_borehole >= 0) {
+            boreholes[selected_borehole].infoWindow.close();
+        }
+        boreholes[borehole_id].infoWindow.open(map, boreholes[borehole_id].marker);
+        selected_borehole = borehole_id;
+    }
+	function load_boreholes(){
+		if borehole_list_all
+		counter = 0;
+        for (borehole_site in borehole_list_all) {
+            echo "\t\tboreholes[counter] = new borehole('"borehole_site['borehole_id']."','Borehole #".$borehole['borehole_ID']."','".$borehole['lat']."','".$borehole['lon']."');\n";
+            echo "\t\tboreholes[counter].marker = new google.maps.Marker({
+                    position: new google.maps.LatLng('".$borehole['lat']."', '".$borehole['lon']."'),
+                    icon: greenMarker,
+                    shadow: shadow,
+                    map: map
+                });\n";
+            echo "\t\tboreholes[counter].infoWindow = new google.maps.InfoWindow({
+                    content: 'Borehole #".$borehole['borehole_ID'];
+            echo "<br/> Status:".$borehole['current_status']."'
+                });\n";
+            echo "\t\tgoogle.maps.event.addListener(boreholes[counter].marker, 'mouseover', function() {select_borehole($counter);});\n";
+            counter++;
+        }
+    }
+	<!--
+    function load_boreholes() {
+        <?php
+        include("connect.php");
+        $q = "SELECT * FROM borehole_borehole WHERE (lat != 0 OR lon != 0) ORDER BY id ASC;";
+        $r = do_query($q);
+        $counter = 0;
+        while ($borehole = mysql_fetch_array($r)) {
+            echo "\t\tboreholes[$counter] = new borehole('".$borehole['borehole_id']."','Borehole #".$borehole['borehole_ID']."','".$borehole['lat']."','".$borehole['lon']."');\n";
+            echo "\t\tboreholes[$counter].marker = new google.maps.Marker({
+                    position: new google.maps.LatLng('".$borehole['lat']."', '".$borehole['lon']."'),
+                    icon: greenMarker,
+                    shadow: shadow,
+                    map: map
+                });\n";
+            echo "\t\tboreholes[$counter].infoWindow = new google.maps.InfoWindow({
+                    content: 'Borehole #".$borehole['borehole_ID'];
+            echo "<br/> Status:".$borehole['current_status']."'
+                });\n";
+            echo "\t\tgoogle.maps.event.addListener(boreholes[$counter].marker, 'mouseover', function() {select_borehole($counter);});\n";
+            $counter++;
+        }
+        ?>
+    }-->
+    </script>
+
+    <div style="display: block; height: 600px; position: relative;">
+        <div id="map_canvas" style="display: inline-block; position: absolute; top: 5px; left: 5px; width: 800px; height: 590px; border: 1px solid #aaa;"></div>
+    </div>
+</body>
+</html>
+
